@@ -1,17 +1,20 @@
 callWithJQuery = (pivotModule) ->
     if typeof exports is "object" and typeof module is "object" # CommonJS
-        pivotModule require("jquery")
+        pivotModule require("jquery"), require("d3")
     else if typeof define is "function" and define.amd # AMD
-        define ["jquery"], pivotModule
+        define ["jquery", "d3"], pivotModule
     # Plain browser env
     else
-        pivotModule jQuery
+        pivotModule jQuery, d3
         
-callWithJQuery ($) ->
+callWithJQuery ($, d3) ->
 
     $.pivotUtilities.d3_renderers = Treemap: (pivotData, opts) ->
         defaults =
             localeStrings: {}
+            d3:
+                width: -> $(window).width() / 1.4
+                height: -> $(window).height() / 1.4
 
         opts = $.extend defaults, opts
 
@@ -38,9 +41,8 @@ callWithJQuery ($) ->
                 addToTree(tree, rowKey, value)
 
         color = d3.scale.category10()
-        width = $(window).width() / 1.4
-        height = $(window).height() / 1.4
-        margin = 10
+        width = opts.d3.width()
+        height = opts.d3.height()
 
         treemap = d3.layout.treemap()
             .size([width, height])
@@ -50,10 +52,8 @@ callWithJQuery ($) ->
         d3.select(result[0])
             .append("div")
                 .style("position", "relative")
-                .style("width", (width + margin*2) + "px")
-                .style("height", (height + margin*2) + "px")
-                .style("left", margin + "px")
-                .style("top", margin + "px")
+                .style("width", width + "px")
+                .style("height", height + "px")
             .datum(tree).selectAll(".node")
                 .data(treemap.padding([15,0,0,0]).value( (d) -> d.value ).nodes)
             .enter().append("div")

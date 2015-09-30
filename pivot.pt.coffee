@@ -12,6 +12,8 @@ callWithJQuery ($) ->
     tpl = $.pivotUtilities.aggregatorTemplates
     r = $.pivotUtilities.renderers
     gcr = $.pivotUtilities.gchart_renderers
+    d3r = $.pivotUtilities.d3_renderers
+    c3r = $.pivotUtilities.c3_renderers
 
     frFmt =    nf(thousandsSep: ".", decimalSep: ",")
     frFmtInt = nf(digitsAfterDecimal: 0, thousandsSep: ".", decimalSep: ",")
@@ -38,6 +40,8 @@ callWithJQuery ($) ->
             "Soma":                                         tpl.sum(frFmt)
             "Soma de Inteiros":                             tpl.sum(frFmtInt)
             "Média":                                        tpl.average(frFmt)
+            "Mínimo":                                       tpl.min(frFmt)
+            "Máximo":                                       tpl.max(frFmt)
             "Soma sobre Soma":                              tpl.sumOverSum(frFmt)
             "Limite Superior a 80%":                        tpl.sumOverSumBound80(true, frFmt)
             "Limite Inferior a 80%":                        tpl.sumOverSumBound80(false, frFmt)
@@ -54,9 +58,21 @@ callWithJQuery ($) ->
             "Mapa de Calor":             r["Heatmap"]
             "Mapa de Calor por Linhas":  r["Row Heatmap"]
             "Mapa de Calor por Colunas": r["Col Heatmap"]
-        
-        gchart_renderers:
+
+    if gcr
+        $.pivotUtilities.locales.pt.gchart_renderers =
             "Gr&aacute;fico de Linhas":            gcr["Line Chart"]
             "Gr&aacute;fico de Barras":            gcr["Bar Chart"]
             "Gr&aacute;fico de Barras Empilhadas": gcr["Stacked Bar Chart"]
             "Gr&aacute;fico de &Aacute;rea":       gcr["Area Chart"]
+
+    if d3r
+        $.pivotUtilities.locales.pt.d3_renderers =
+            "Mapa de Árvore": d3r["Treemap"]
+
+    if c3r
+      $.pivotUtilities.locales.pt.c3_renderers =
+        "Gr&aacute;fico de Linhas": c3r["Line Chart C3"]
+        "Gr&aacute;fico de Barras": c3r["Bar Chart C3"]
+
+    return $.pivotUtilities.locales.pt
